@@ -2,12 +2,15 @@ using UnityEngine;
 
 public abstract class ItemSpawner : MonoBehaviour
 {
-    [Header("설정")]
+    [Header("스폰 설정")]
     public Transform[] spawnPoints;
     public string itemTag = "";
     public float minInterval = 1f;
     public float maxInterval = 3f;
-    
+
+    [Header("이벤트 채널 설정")]
+    [SerializeField] private FloorRecycledChannelSO floorRecycledChannel;
+
     [SerializeField]
     protected float currentInterval;
     [SerializeField]
@@ -22,6 +25,11 @@ public abstract class ItemSpawner : MonoBehaviour
     protected virtual void Awake()
     {
         currentInterval = Random.Range(minInterval, maxInterval);
+        if (floorRecycledChannel != null)
+        {
+            floorRecycledChannel.OnFloorRecycled += OnFloorRecycled;
+            Debug.Log("ItemSpawner subscribed to OnFloorRecycled");
+        }
     }
 
     protected virtual void Update()
@@ -29,7 +37,15 @@ public abstract class ItemSpawner : MonoBehaviour
         timer += Time.deltaTime;
     }
 
-    public virtual void reset(GameObject parent)
+    public virtual void Disable()
+    {
+        if (floorRecycledChannel != null)
+        {
+            floorRecycledChannel.OnFloorRecycled -= OnFloorRecycled;
+        }
+    }
+
+    public void OnFloorRecycled(GameObject parent)
     {
         parentObject = parent;
     }

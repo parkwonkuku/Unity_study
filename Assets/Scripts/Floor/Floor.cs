@@ -11,12 +11,14 @@ public class Floor : MonoBehaviour
     public float moveSpeed = 5f;        // 현재/시작 속도
     public float acceleration = 0.1f;    // 초당 증가할 속도 값
     public float maxSpeed = 20f;         // 도달할 수 있는 최대 속도
+    
+    [Header("이벤트 채널 설정")]
+    [SerializeField] private FloorRecycledChannelSO floorRecycledChannel;
 
     private float _accumulatedMovement = 0f; // 누적 이동 거리
     private int currentFloorIndex = 0; // 다음에 이동시킬 바닥 인덱스
     private float floorLength; // 바닥의 Z축 길이
 
-    public event Action<GameObject, int> OnFloorRecycled;
     
     void Awake()
     {
@@ -26,6 +28,11 @@ public class Floor : MonoBehaviour
                 floors.Add(track.gameObject);
         }
         floorLength = GetTotalZLength(floors[0]);
+    }
+
+    void Start()
+    {
+        floorRecycledChannel.Raise(floors[1]);
     }
 
     void Update()
@@ -49,7 +56,7 @@ public class Floor : MonoBehaviour
         {
             GameObject recycledFloor = floors[currentFloorIndex];
             recycledFloor.transform.position += new Vector3(0, 0, floorLength * floors.Count);
-            OnFloorRecycled?.Invoke(recycledFloor, currentFloorIndex);
+            floorRecycledChannel?.Raise(recycledFloor);
             
             _accumulatedMovement -= floorLength;
             currentFloorIndex = (currentFloorIndex + 1) % floors.Count;

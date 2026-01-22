@@ -15,11 +15,11 @@ public class FloorManager : MonoBehaviour
         
         startSpeed = floor.moveSpeed;
 
-        if (obstacleSpawner != null && floor != null)
-            obstacleSpawner.reset(floor.floors[1]);
+        //if (obstacleSpawner != null && floor != null)
+            //obstacleSpawner.reset(floor.floors[1]);
 
-        if (coinSpawner != null && floor != null)
-            coinSpawner.reset(floor.floors[1]);
+        //if (coinSpawner != null && floor != null)
+            //coinSpawner.reset(floor.floors[1]);
     }
 
     void Update()
@@ -32,17 +32,17 @@ public class FloorManager : MonoBehaviour
 
     void OnEnable()
     {
-        floor.OnFloorRecycled += HandleFloorRecycled;
+        //floor.OnFloorRecycled += HandleFloorRecycled;
     }
 
     void OnDisable()
     {
-        floor.OnFloorRecycled -= HandleFloorRecycled;
+        //floor.OnFloorRecycled -= HandleFloorRecycled;
     }
 
-    void HandleFloorRecycled(GameObject recycledFloor, int floorIndex)
+    void HandleFloorRecycled(GameObject recycledFloor)
     {
-        obstacleSpawner.reset(recycledFloor);
-        coinSpawner.reset(recycledFloor);
+        //obstacleSpawner.reset(recycledFloor);
+        //coinSpawner.reset(recycledFloor);
     }
 }
